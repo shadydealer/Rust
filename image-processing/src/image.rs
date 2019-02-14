@@ -5,7 +5,7 @@ use image::image::{
   DynamicImage,
   ImageError,
   Pixel
- }
+ };
 
 use std::path::PathBuf;
 
@@ -13,7 +13,7 @@ const MAX_COLOR_INTENSITY_U8: u8 = 255;
 const MAX_COLOR_INTENSITY_USIZE: usize = 255;
 
 pub struct Image {
-  image_path: PathBuf,
+  pub image_path: PathBuf,
   dynamic_image: DynamicImage
 }
 
@@ -22,7 +22,7 @@ impl Image {
     return match image::open(image_path) {
       Err(error) => Err(error),
       Ok(image) => Ok(Self {
-        image_path: String::from(image_path),
+        image_path: PathBuf::from(image_path),
         dynamic_image: image
       })
     }
@@ -73,5 +73,9 @@ impl Image {
     }
 
     cumulative_distributions
+  }
+
+  pub fn get_dir(&self) -> Option<PathBuf> {
+    self.image_path.parent().map(|p| p.to_path_buf())
   }
 }

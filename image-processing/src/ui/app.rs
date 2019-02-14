@@ -46,13 +46,13 @@ impl App {
       App { window, header, content }
     }
 
-    pub fn connect_events(&self) -> ConnectedApp {
+    pub fn connect_events(self) -> ConnectedApp {
 
       let current_file = Arc::new(RwLock::new(None));
 
       {
-        let save = self.header.save;
-        let save_as = self.header.save_as;
+        let save = &self.header.save;
+        let save_as = &self.header.save_as;
 
       // Connect all of the events that this UI will act upon.
       self.open_file(current_file.clone());
@@ -60,7 +60,7 @@ impl App {
       // self.save_event(&save, &save_as, current_file.clone(), true);
     }
 
-    ConnectedApp::new(*self)
+    ConnectedApp::new(self)
   }
 
   fn open_file(&self, current_file: Arc<RwLock<Option<Image>>>) {
@@ -69,8 +69,8 @@ impl App {
       // directory as the preferred directory, if it's set.
       let open_dialog = OpenDialog::new({
         let lock = current_file.read().unwrap();
-        if let Some(ref path) = *lock {
-          path.get_dir()
+        if let Some(ref image) = *lock {
+          image.get_dir()
         } else {
           None
         }
