@@ -2,7 +2,7 @@ use gtk::*;
 
 pub struct SideMenu {
 	pub container: Box,
-		pub equalize_histogram: Button,
+	pub equalize_histogram: Button,
 	pub edge_detection: Button
 }
 
@@ -24,7 +24,7 @@ impl SideMenu {
 
 	fn initialize_equalize_histogram_button(container: &Box) -> Button {
 		let padding_between_children = 0;
-		let equalize_histogram_button = Button::new_with_label("equelize histogram");
+		let equalize_histogram_button = Button::new_with_label("equalize histogram");
 
 		equalize_histogram_button.set_halign(Align::Center);
 

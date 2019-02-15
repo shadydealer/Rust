@@ -2,8 +2,15 @@ use std::process;
 use std::sync::{Arc, RwLock};
 
 use gtk::*;
-use super::{ Header, Content, ConnectedApp};
-use super::dialogs::open_dialog::OpenDialog;
+
+use super::{ 
+ Header,
+ Content,
+ ConnectedApp,
+ open::open,
+ save::save,
+ equalize_histogram::equalize_histogram
+};
 
 use image::Image;
 
@@ -56,25 +63,53 @@ impl App {
 
       // Connect all of the events that this UI will act upon.
       self.open_file(current_file.clone());
-      // self.save_event(&save, &save, current_file.clone(), false);
-      // self.save_event(&save, &save_as, current_file.clone(), true);
+      self.save_event(&save, current_file.clone(), false);
+      self.save_event(&save_as, current_file.clone(), true);
+      self.equalize_histogram(current_file.clone());
     }
 
     ConnectedApp::new(self)
   }
 
+  fn equalize_histogram(&self, current_file: Arc<RwLock<Option<Image>>>) {
+
+    let image_container = self.content.image_container.image_widget.clone();
+
+    let equalize_histogram_button = &self.content.side_menu.equalize_histogram;
+    equalize_histogram_button.connect_clicked(move |_| {
+      match equalize_histogram(&image_container, &current_file) {
+        Err(error) => println!("{:?}", error),
+        Ok(()) => ()
+      }
+    });
+  }
+
   fn open_file(&self, current_file: Arc<RwLock<Option<Image>>>) {
+
+    let headerbar = self.header.container.clone();
+    let image_container = self.content.image_container.image_widget.clone();
+
     self.header.open.connect_clicked(move |_| {
-      // Create a new open file dialog using the current file's parent
-      // directory as the preferred directory, if it's set.
-      let open_dialog = OpenDialog::new({
-        let lock = current_file.read().unwrap();
-        if let Some(ref image) = *lock {
-          image.get_dir()
-        } else {
-          None
-        }
-      });
+      match open(&headerbar, &image_container, &current_file) {
+        Err(error) => println!("{:?}", error),
+        Ok(()) => ()
+      }
+    });
+  }
+
+  fn save_event( &self,
+                actual_button: &Button,
+                current_file: Arc<RwLock<Option<Image>>>,
+                save_as: bool,
+                ) {
+    let headerbar = self.header.container.clone();
+    let actual_button = actual_button.clone();
+
+    actual_button.connect_clicked( move |_| {
+      match save(&headerbar, &current_file, save_as) {
+        Err(error) => println!("{:?}", error),
+        Ok(()) => ()
+      }
     });
   }
 }

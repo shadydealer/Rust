@@ -17,7 +17,7 @@ impl Content {
 		let side_menu = SideMenu::new();
 		let image_container = ImageContainer::new();
 
-		container.pack_start(&image_container.container, false, false, padding_between_children as u32);
+		container.pack_start(&image_container.image_widget, false, false, padding_between_children as u32);
 		container.pack_end(&side_menu.container, false, false, padding_between_children as u32);
 
 		Self {
