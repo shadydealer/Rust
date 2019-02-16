@@ -102,14 +102,13 @@ impl App {
   }
 
   fn save_event( &self,
-                actual_button: &Button,
+                button: &Button,
                 current_file: Arc<RwLock<Option<Image>>>,
                 save_as: bool,
                 ) {
     let headerbar = self.header.container.clone();
-    let actual_button = actual_button.clone();
 
-    actual_button.connect_clicked( move |sb| {
+    button.connect_clicked( move |sb| {
       sb.set_sensitive(false);
       match save(&headerbar, &current_file, save_as) {
         Err(error) => println!("{:?}", error),
