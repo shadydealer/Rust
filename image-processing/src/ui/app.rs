@@ -76,11 +76,13 @@ impl App {
     let image_container = self.content.image_container.image_widget.clone();
 
     let equalize_histogram_button = &self.content.side_menu.equalize_histogram;
-    equalize_histogram_button.connect_clicked(move |_| {
+    equalize_histogram_button.connect_clicked(move |ehb| {
+      ehb.set_sensitive(false);
       match equalize_histogram(&image_container, &current_file) {
         Err(error) => println!("{:?}", error),
         Ok(()) => ()
       }
+      ehb.set_sensitive(true);
     });
   }
 
@@ -89,11 +91,13 @@ impl App {
     let headerbar = self.header.container.clone();
     let image_container = self.content.image_container.image_widget.clone();
 
-    self.header.open.connect_clicked(move |_| {
+    self.header.open.connect_clicked(move |ob| {
+      ob.set_sensitive(false);
       match open(&headerbar, &image_container, &current_file) {
         Err(error) => println!("{:?}", error),
         Ok(()) => ()
       }
+      ob.set_sensitive(true);
     });
   }
 
@@ -105,11 +109,13 @@ impl App {
     let headerbar = self.header.container.clone();
     let actual_button = actual_button.clone();
 
-    actual_button.connect_clicked( move |_| {
+    actual_button.connect_clicked( move |sb| {
+      sb.set_sensitive(false);
       match save(&headerbar, &current_file, save_as) {
         Err(error) => println!("{:?}", error),
         Ok(()) => ()
       }
+      sb.set_sensitive(true);
     });
   }
 }
