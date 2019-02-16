@@ -80,7 +80,6 @@ impl Image {
     for (c, r, mut rgb) in self.dynamic_image.pixels() {
       let cd = cumulative_distributions[rgb[0] as usize];
       let val = ((((cd - cdf_min) as f32) / ((width * height)as f32)) * (MAX_COLOR_INTENSITY_U8 as f32) )as u8;
-      println!("{:?}", val);
       new_image_buffer.put_pixel(c,r, Pixel::from_channels(val,val,val,rgb[3]));
     }
 
